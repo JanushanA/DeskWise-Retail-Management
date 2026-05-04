@@ -29,11 +29,6 @@
         private void InitializeComponent()
         {
             this.dgvInventory = new System.Windows.Forms.DataGridView();
-            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colBrand = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbAdd = new System.Windows.Forms.GroupBox();
             this.txtID = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -47,6 +42,13 @@
             this.btnAdd = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
+            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colBrand = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtQuantity = new System.Windows.Forms.TextBox();
+            this.Quantity = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvInventory)).BeginInit();
             this.gbAdd.SuspendLayout();
             this.SuspendLayout();
@@ -56,19 +58,148 @@
             this.dgvInventory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvInventory.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colID,
+            this.colName,
             this.colQuantity,
             this.colBrand,
-            this.colPrice,
-            this.colName});
+            this.colPrice});
             this.dgvInventory.Location = new System.Drawing.Point(246, 13);
             this.dgvInventory.Name = "dgvInventory";
-            this.dgvInventory.Size = new System.Drawing.Size(435, 338);
+            this.dgvInventory.Size = new System.Drawing.Size(540, 338);
             this.dgvInventory.TabIndex = 3;
+            // 
+            // gbAdd
+            // 
+            this.gbAdd.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.gbAdd.Controls.Add(this.txtQuantity);
+            this.gbAdd.Controls.Add(this.Quantity);
+            this.gbAdd.Controls.Add(this.txtID);
+            this.gbAdd.Controls.Add(this.label4);
+            this.gbAdd.Controls.Add(this.txtDelete);
+            this.gbAdd.Controls.Add(this.txtBrand);
+            this.gbAdd.Controls.Add(this.txtPrice);
+            this.gbAdd.Controls.Add(this.txtName);
+            this.gbAdd.Controls.Add(this.label3);
+            this.gbAdd.Controls.Add(this.label2);
+            this.gbAdd.Controls.Add(this.label1);
+            this.gbAdd.Controls.Add(this.btnAdd);
+            this.gbAdd.Controls.Add(this.btnDelete);
+            this.gbAdd.Controls.Add(this.btnUpdate);
+            this.gbAdd.Location = new System.Drawing.Point(3, 13);
+            this.gbAdd.Name = "gbAdd";
+            this.gbAdd.Size = new System.Drawing.Size(237, 338);
+            this.gbAdd.TabIndex = 2;
+            this.gbAdd.TabStop = false;
+            this.gbAdd.Text = "Add Or Delete Product";
+            // 
+            // txtID
+            // 
+            this.txtID.Location = new System.Drawing.Point(62, 45);
+            this.txtID.Name = "txtID";
+            this.txtID.Size = new System.Drawing.Size(100, 20);
+            this.txtID.TabIndex = 11;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(20, 47);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(18, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "ID";
+            // 
+            // txtDelete
+            // 
+            this.txtDelete.Location = new System.Drawing.Point(109, 232);
+            this.txtDelete.Name = "txtDelete";
+            this.txtDelete.Size = new System.Drawing.Size(100, 20);
+            this.txtDelete.TabIndex = 9;
+            // 
+            // txtBrand
+            // 
+            this.txtBrand.Location = new System.Drawing.Point(62, 122);
+            this.txtBrand.Name = "txtBrand";
+            this.txtBrand.Size = new System.Drawing.Size(100, 20);
+            this.txtBrand.TabIndex = 8;
+            // 
+            // txtPrice
+            // 
+            this.txtPrice.Location = new System.Drawing.Point(62, 96);
+            this.txtPrice.Name = "txtPrice";
+            this.txtPrice.Size = new System.Drawing.Size(100, 20);
+            this.txtPrice.TabIndex = 7;
+            // 
+            // txtName
+            // 
+            this.txtName.Location = new System.Drawing.Point(62, 70);
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(100, 20);
+            this.txtName.TabIndex = 6;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(20, 124);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Brand";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(20, 95);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(31, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Price";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(20, 70);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Name";
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Location = new System.Drawing.Point(41, 183);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnAdd.TabIndex = 2;
+            this.btnAdd.Text = "Add Product";
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Location = new System.Drawing.Point(28, 229);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(75, 23);
+            this.btnDelete.TabIndex = 1;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Location = new System.Drawing.Point(122, 183);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(75, 23);
+            this.btnUpdate.TabIndex = 0;
+            this.btnUpdate.Text = "Update";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // colID
             // 
             this.colID.HeaderText = "ID";
             this.colID.Name = "colID";
+            // 
+            // colName
+            // 
+            this.colName.HeaderText = "Name";
+            this.colName.Name = "colName";
             // 
             // colQuantity
             // 
@@ -85,132 +216,21 @@
             this.colPrice.HeaderText = "Price";
             this.colPrice.Name = "colPrice";
             // 
-            // colName
+            // txtQuantity
             // 
-            this.colName.HeaderText = "Name";
-            this.colName.Name = "colName";
+            this.txtQuantity.Location = new System.Drawing.Point(62, 148);
+            this.txtQuantity.Name = "txtQuantity";
+            this.txtQuantity.Size = new System.Drawing.Size(100, 20);
+            this.txtQuantity.TabIndex = 13;
             // 
-            // gbAdd
+            // Quantity
             // 
-            this.gbAdd.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.gbAdd.Controls.Add(this.txtID);
-            this.gbAdd.Controls.Add(this.label4);
-            this.gbAdd.Controls.Add(this.txtDelete);
-            this.gbAdd.Controls.Add(this.txtBrand);
-            this.gbAdd.Controls.Add(this.txtPrice);
-            this.gbAdd.Controls.Add(this.txtName);
-            this.gbAdd.Controls.Add(this.label3);
-            this.gbAdd.Controls.Add(this.label2);
-            this.gbAdd.Controls.Add(this.label1);
-            this.gbAdd.Controls.Add(this.btnAdd);
-            this.gbAdd.Controls.Add(this.btnDelete);
-            this.gbAdd.Controls.Add(this.btnUpdate);
-            this.gbAdd.Location = new System.Drawing.Point(17, 13);
-            this.gbAdd.Name = "gbAdd";
-            this.gbAdd.Size = new System.Drawing.Size(223, 338);
-            this.gbAdd.TabIndex = 2;
-            this.gbAdd.TabStop = false;
-            this.gbAdd.Text = "Add Or Delete Product";
-            // 
-            // txtID
-            // 
-            this.txtID.Location = new System.Drawing.Point(48, 44);
-            this.txtID.Name = "txtID";
-            this.txtID.Size = new System.Drawing.Size(100, 20);
-            this.txtID.TabIndex = 11;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 46);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(18, 13);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "ID";
-            // 
-            // txtDelete
-            // 
-            this.txtDelete.Location = new System.Drawing.Point(98, 209);
-            this.txtDelete.Name = "txtDelete";
-            this.txtDelete.Size = new System.Drawing.Size(100, 20);
-            this.txtDelete.TabIndex = 9;
-            // 
-            // txtBrand
-            // 
-            this.txtBrand.Location = new System.Drawing.Point(48, 121);
-            this.txtBrand.Name = "txtBrand";
-            this.txtBrand.Size = new System.Drawing.Size(100, 20);
-            this.txtBrand.TabIndex = 8;
-            // 
-            // txtPrice
-            // 
-            this.txtPrice.Location = new System.Drawing.Point(48, 95);
-            this.txtPrice.Name = "txtPrice";
-            this.txtPrice.Size = new System.Drawing.Size(100, 20);
-            this.txtPrice.TabIndex = 7;
-            // 
-            // txtName
-            // 
-            this.txtName.Location = new System.Drawing.Point(48, 69);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(100, 20);
-            this.txtName.TabIndex = 6;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 123);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "Brand";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 94);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Price";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 69);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Name";
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Location = new System.Drawing.Point(30, 160);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnAdd.TabIndex = 2;
-            this.btnAdd.Text = "Add Product";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.Location = new System.Drawing.Point(17, 206);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(75, 23);
-            this.btnDelete.TabIndex = 1;
-            this.btnDelete.Text = "Delete";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            // 
-            // btnUpdate
-            // 
-            this.btnUpdate.Location = new System.Drawing.Point(111, 160);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(75, 23);
-            this.btnUpdate.TabIndex = 0;
-            this.btnUpdate.Text = "Update";
-            this.btnUpdate.UseVisualStyleBackColor = true;
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            this.Quantity.AutoSize = true;
+            this.Quantity.Location = new System.Drawing.Point(11, 151);
+            this.Quantity.Name = "Quantity";
+            this.Quantity.Size = new System.Drawing.Size(46, 13);
+            this.Quantity.TabIndex = 12;
+            this.Quantity.Text = "Quantity";
             // 
             // Inventory
             // 
@@ -219,7 +239,7 @@
             this.Controls.Add(this.dgvInventory);
             this.Controls.Add(this.gbAdd);
             this.Name = "Inventory";
-            this.Size = new System.Drawing.Size(695, 365);
+            this.Size = new System.Drawing.Size(821, 430);
             ((System.ComponentModel.ISupportInitialize)(this.dgvInventory)).EndInit();
             this.gbAdd.ResumeLayout(false);
             this.gbAdd.PerformLayout();
@@ -230,11 +250,6 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dgvInventory;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colQuantity;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colBrand;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colPrice;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
         private System.Windows.Forms.GroupBox gbAdd;
         private System.Windows.Forms.TextBox txtID;
         private System.Windows.Forms.Label label4;
@@ -248,5 +263,12 @@
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colQuantity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colBrand;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colPrice;
+        private System.Windows.Forms.TextBox txtQuantity;
+        private System.Windows.Forms.Label Quantity;
     }
 }
