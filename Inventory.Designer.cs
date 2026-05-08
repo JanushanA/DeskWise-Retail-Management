@@ -30,6 +30,9 @@
         {
             this.dgvInventory = new System.Windows.Forms.DataGridView();
             this.gbAdd = new System.Windows.Forms.GroupBox();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.txtQuantity = new System.Windows.Forms.TextBox();
+            this.Quantity = new System.Windows.Forms.Label();
             this.txtID = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txtDelete = new System.Windows.Forms.TextBox();
@@ -42,13 +45,6 @@
             this.btnAdd = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
-            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colBrand = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txtQuantity = new System.Windows.Forms.TextBox();
-            this.Quantity = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvInventory)).BeginInit();
             this.gbAdd.SuspendLayout();
             this.SuspendLayout();
@@ -56,12 +52,6 @@
             // dgvInventory
             // 
             this.dgvInventory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvInventory.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colID,
-            this.colName,
-            this.colQuantity,
-            this.colBrand,
-            this.colPrice});
             this.dgvInventory.Location = new System.Drawing.Point(246, 13);
             this.dgvInventory.Name = "dgvInventory";
             this.dgvInventory.Size = new System.Drawing.Size(540, 338);
@@ -70,6 +60,7 @@
             // gbAdd
             // 
             this.gbAdd.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.gbAdd.Controls.Add(this.btnSave);
             this.gbAdd.Controls.Add(this.txtQuantity);
             this.gbAdd.Controls.Add(this.Quantity);
             this.gbAdd.Controls.Add(this.txtID);
@@ -90,6 +81,32 @@
             this.gbAdd.TabIndex = 2;
             this.gbAdd.TabStop = false;
             this.gbAdd.Text = "Add Or Delete Product";
+            // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(71, 281);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.TabIndex = 14;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // txtQuantity
+            // 
+            this.txtQuantity.Location = new System.Drawing.Point(62, 148);
+            this.txtQuantity.Name = "txtQuantity";
+            this.txtQuantity.Size = new System.Drawing.Size(100, 20);
+            this.txtQuantity.TabIndex = 13;
+            // 
+            // Quantity
+            // 
+            this.Quantity.AutoSize = true;
+            this.Quantity.Location = new System.Drawing.Point(11, 151);
+            this.Quantity.Name = "Quantity";
+            this.Quantity.Size = new System.Drawing.Size(46, 13);
+            this.Quantity.TabIndex = 12;
+            this.Quantity.Text = "Quantity";
             // 
             // txtID
             // 
@@ -180,6 +197,7 @@
             this.btnDelete.TabIndex = 1;
             this.btnDelete.Text = "Delete";
             this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnUpdate
             // 
@@ -191,47 +209,6 @@
             this.btnUpdate.UseVisualStyleBackColor = true;
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
-            // colID
-            // 
-            this.colID.HeaderText = "ID";
-            this.colID.Name = "colID";
-            // 
-            // colName
-            // 
-            this.colName.HeaderText = "Name";
-            this.colName.Name = "colName";
-            // 
-            // colQuantity
-            // 
-            this.colQuantity.HeaderText = "Quantity";
-            this.colQuantity.Name = "colQuantity";
-            // 
-            // colBrand
-            // 
-            this.colBrand.HeaderText = "Brand";
-            this.colBrand.Name = "colBrand";
-            // 
-            // colPrice
-            // 
-            this.colPrice.HeaderText = "Price";
-            this.colPrice.Name = "colPrice";
-            // 
-            // txtQuantity
-            // 
-            this.txtQuantity.Location = new System.Drawing.Point(62, 148);
-            this.txtQuantity.Name = "txtQuantity";
-            this.txtQuantity.Size = new System.Drawing.Size(100, 20);
-            this.txtQuantity.TabIndex = 13;
-            // 
-            // Quantity
-            // 
-            this.Quantity.AutoSize = true;
-            this.Quantity.Location = new System.Drawing.Point(11, 151);
-            this.Quantity.Name = "Quantity";
-            this.Quantity.Size = new System.Drawing.Size(46, 13);
-            this.Quantity.TabIndex = 12;
-            this.Quantity.Text = "Quantity";
-            // 
             // Inventory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -240,6 +217,7 @@
             this.Controls.Add(this.gbAdd);
             this.Name = "Inventory";
             this.Size = new System.Drawing.Size(821, 430);
+            this.Load += new System.EventHandler(this.Inventory_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvInventory)).EndInit();
             this.gbAdd.ResumeLayout(false);
             this.gbAdd.PerformLayout();
@@ -263,12 +241,8 @@
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnUpdate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colQuantity;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colBrand;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colPrice;
         private System.Windows.Forms.TextBox txtQuantity;
         private System.Windows.Forms.Label Quantity;
+        private System.Windows.Forms.Button btnSave;
     }
 }

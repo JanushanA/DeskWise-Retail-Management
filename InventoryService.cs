@@ -21,7 +21,7 @@ namespace WindowsFormsApp10
             {
                 string[] parts = line.Split(',');
 
-                // Now checking for exactly 4 columns as per new header
+                
                 if (parts.Length >= 4)
                 {
                     try
@@ -31,14 +31,14 @@ namespace WindowsFormsApp10
                         string brand = parts[2];
                         decimal price = decimal.Parse(parts[3]) / 100m;
 
-                        // default quantity is 0
+                        
                         int quantity = 0;
 
                         products.Add(new Product(id, name, brand, price, quantity));
                     }
                     catch
                     {
-                        // Skips rows with formatting errors
+                        
                     }
                 }
             }
@@ -49,12 +49,12 @@ namespace WindowsFormsApp10
         {
             using (StreamWriter writer = new StreamWriter(filePath))
             {
-                // Match header exactly
+                
                 writer.WriteLine("ProductID,ProductName,ProductBrand,Price,Quantity");
 
                 foreach (var p in products)
                 {
-                    // Converts price back to cents for storage and includes quantity
+                    
                     string line = $"{p.ProductID},{p.ProductName},{p.ProductBrand},{p.ProductPrice * 100},{p.ProductQuantity}";
                     writer.WriteLine(line);
                 }
