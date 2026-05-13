@@ -100,8 +100,60 @@ namespace WindowsFormsApp10
             lblTotal.Text = $"Total: ${total:F2}";
         }
 
+        private void dgvCurrentOrder_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
+        }
 
+        private void CheckOut_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                var products = InventoryService.LoadFromCSV(_csvPath);
+                _availableProducts = new BindingList<Product>(products);
+                dgvAvailable.DataSource = _availableProducts;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not load inventory: " + ex.Message);
+            }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            if (dgvAvailable.SelectedRows.Count > 0)
+            {
+                
+                Product selectedProduct = (Product)dgvAvailable.SelectedRows[0].DataBoundItem;
+
+               
+                AddProductToOrder(selectedProduct);
+            }
+            else
+            {
+                MessageBox.Show("Please select a product from the inventory list first.");
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            if (dgvCurrentOrder.SelectedRows.Count > 0)
+            {
+                
+                OrderItem itemToRemove = (OrderItem)dgvCurrentOrder.SelectedRows[0].DataBoundItem;
+
+                
+                _currentOrderItems.Remove(itemToRemove);
+
+               
+                _currentOrderItems.ResetBindings();
+                UpdateTotal();
+            }
+            else
+            {
+                MessageBox.Show("Please select an item in your current order to remove.");
+            }
+        }
     }
 
 }

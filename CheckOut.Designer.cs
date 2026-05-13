@@ -60,6 +60,7 @@
             this.dgvCurrentOrder.Name = "dgvCurrentOrder";
             this.dgvCurrentOrder.Size = new System.Drawing.Size(499, 341);
             this.dgvCurrentOrder.TabIndex = 1;
+            this.dgvCurrentOrder.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCurrentOrder_CellContentClick);
             this.dgvCurrentOrder.DragDrop += new System.Windows.Forms.DragEventHandler(this.dgvCurrentOrder_DragDrop);
             this.dgvCurrentOrder.DragEnter += new System.Windows.Forms.DragEventHandler(this.dgvCurrentOrder_DragEnter);
             // 
@@ -71,6 +72,7 @@
             this.btnAdd.TabIndex = 2;
             this.btnAdd.Text = "Add to Order";
             this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // btnRemove
             // 
@@ -80,6 +82,7 @@
             this.btnRemove.TabIndex = 3;
             this.btnRemove.Text = "Remove from Order";
             this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // button3
             // 
@@ -167,6 +170,7 @@
             this.Controls.Add(this.dgvAvailable);
             this.Name = "CheckOut";
             this.Size = new System.Drawing.Size(802, 596);
+            this.Load += new System.EventHandler(this.CheckOut_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvAvailable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCurrentOrder)).EndInit();
             this.ResumeLayout(false);
