@@ -33,19 +33,21 @@
             this.btnCheckOut = new System.Windows.Forms.Button();
             this.btnHome = new System.Windows.Forms.Button();
             this.pnlContent = new System.Windows.Forms.Panel();
+            this.btnReport = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.panel1.Controls.Add(this.btnReport);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.btnCheckOut);
             this.panel1.Controls.Add(this.btnHome);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(96, 718);
+            this.panel1.Size = new System.Drawing.Size(96, 772);
             this.panel1.TabIndex = 0;
             // 
             // button1
@@ -83,16 +85,26 @@
             // 
             this.pnlContent.BackColor = System.Drawing.SystemColors.ControlDark;
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlContent.Location = new System.Drawing.Point(95, 0);
+            this.pnlContent.Location = new System.Drawing.Point(102, 0);
             this.pnlContent.Name = "pnlContent";
-            this.pnlContent.Size = new System.Drawing.Size(950, 718);
+            this.pnlContent.Size = new System.Drawing.Size(1059, 772);
             this.pnlContent.TabIndex = 1;
+            // 
+            // btnReport
+            // 
+            this.btnReport.Location = new System.Drawing.Point(0, 153);
+            this.btnReport.Name = "btnReport";
+            this.btnReport.Size = new System.Drawing.Size(96, 23);
+            this.btnReport.TabIndex = 3;
+            this.btnReport.Text = "Report";
+            this.btnReport.UseVisualStyleBackColor = true;
+            this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1045, 718);
+            this.ClientSize = new System.Drawing.Size(1161, 772);
             this.Controls.Add(this.pnlContent);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
@@ -108,7 +120,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnCheckOut;
         private System.Windows.Forms.Button btnHome;
-        private System.Windows.Forms.Panel pnlContent;
+        public System.Windows.Forms.Panel pnlContent;
+        private System.Windows.Forms.Button btnReport;
     }
 }
 

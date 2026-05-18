@@ -1,7 +1,7 @@
 ProductID,ProductName,ProductBrand,Price,Quantity
-1000,Presto Fly 4,Nike,11999.00,0
-1001,Superstar Bold 2,Adidas,11999.00,0
-1002,Old Skool Lite 3,Vans,4999.00,0
+1000,Presto Fly 4,Nike,11999.00,1
+1001,Superstar Bold 2,Adidas,11999.00,2
+1002,Old Skool Lite 3,Vans,4999.00,3
 1003,Air Zoom Structure 2,Nike,12999.00,0
 1004,Flyknit Racer,Nike,9999.00,0
 1005,Superstar Foundation,Adidas,7999.00,0
@@ -22,10 +22,10 @@ ProductID,ProductName,ProductBrand,Price,Quantity
 1020,Stan Smith Bold,Adidas,7999.00,0
 1021,Sk8-Hi Pro,Vans,5999.00,0
 1022,Free RN Flyknit,Nike,9999.00,0
-1023,Yung-96,Adidas,8999.00,0
-1024,Authentic Lite,Vans,3499.00,0
-1025,Air Max 270,Nike,10999.00,0
-1026,Gazelle Bold,Adidas,8999.00,0
+1023,Yung-96,Adidas,8999.00,1
+1024,Authentic Lite,Vans,3499.00,2
+1025,Air Max 270,Nike,10999.00,3
+1026,Gazelle Bold,Adidas,8999.00,4
 1027,Era Pro,Vans,5499.00,0
 1028,Presto Fly 2,Nike,9999.00,0
 1029,Superstar Foundation 2,Adidas,10999.00,0

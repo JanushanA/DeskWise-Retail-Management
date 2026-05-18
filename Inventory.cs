@@ -184,6 +184,8 @@ namespace WindowsFormsApp10
             var tempData = InventoryService.LoadFromCSV(path);
 
 
+            
+
             _inventoryList.Clear();
             foreach (var item in tempData)
             {
@@ -193,6 +195,14 @@ namespace WindowsFormsApp10
 
 
             dgvInventory.DataSource = _inventoryList;
+        }
+
+        private void ProductQuantity()
+        {
+            var tempData = InventoryService.LoadFromCSV(filePath);
+
+
+
         }
 
        

@@ -15,6 +15,7 @@ namespace WindowsFormsApp10
         public Form1()
         {
             InitializeComponent();
+            ShowScreen(new Home());
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -42,6 +43,11 @@ namespace WindowsFormsApp10
         private void btnHome_Click(object sender, EventArgs e)
         {
             ShowScreen(new Home());
+        }
+
+        private void btnReport_Click(object sender, EventArgs e)
+        {
+            ShowScreen(new Report());
         }
     }
 }

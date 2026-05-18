@@ -32,7 +32,7 @@ namespace WindowsFormsApp10
                         decimal price = decimal.Parse(parts[3]) / 100m;
 
                         
-                        int quantity = 0;
+                        int quantity = Convert.ToInt32(parts[4]);
 
                         products.Add(new Product(id, name, brand, price, quantity));
                     }
@@ -44,6 +44,8 @@ namespace WindowsFormsApp10
             }
             return products;
         }
+
+
 
         public static void SaveToCSV(string filePath, List<Product> products)
         {
