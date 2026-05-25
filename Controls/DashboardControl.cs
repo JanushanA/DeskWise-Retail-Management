@@ -56,33 +56,61 @@ namespace DeskWise.Controls
             chartSales.Series.Clear();
             chartSales.ChartAreas.Clear();
             chartSales.Legends.Clear();
+            chartSales.Titles.Clear();
+
             ChartArea area = new ChartArea("MainArea");
-            area.AxisX.MajorGrid.LineColor = Color.FromArgb(226, 232, 240);
-            area.AxisY.MajorGrid.LineColor = Color.FromArgb(226, 232, 240);
+            ConfigureChartArea(area);
+            area.AxisX.MajorGrid.Enabled = false;
+            area.AxisX.Interval = 1;
             area.AxisX.LabelStyle.Font = new Font("Segoe UI", 8F);
+            area.AxisX.MajorGrid.LineColor = Color.FromArgb(226, 232, 240);
+            area.AxisY.Minimum = 0;
             area.AxisY.LabelStyle.Font = new Font("Segoe UI", 8F);
+            area.AxisY.LabelStyle.Format = "C0";
+            area.AxisY.MajorGrid.LineColor = Color.FromArgb(226, 232, 240);
             chartSales.ChartAreas.Add(area);
+
             Series series = new Series("Sales")
             {
+                ChartArea = "MainArea",
                 ChartType = SeriesChartType.Line,
                 Color = Color.FromArgb(37, 99, 235),
                 BorderWidth = 3,
                 MarkerStyle = MarkerStyle.Circle,
                 MarkerSize = 8,
-                MarkerColor = Color.FromArgb(37, 99, 235)
+                MarkerColor = Color.FromArgb(37, 99, 235),
+                XValueType = ChartValueType.String,
+                IsXValueIndexed = true
             };
+            chartSales.Series.Add(series);
 
-            // One point per day for the rolling 7-day window
-            DateTime start = DateTime.Today.AddDays(-6);
-            for (int i = 0; i < 7; i++)
+            DateTime start;
+            DateTime end;
+            OrderService.GetSalesChartWindow(out start, out end);
+
+            for (DateTime day = start.Date; day <= end.Date; day = day.AddDays(1))
             {
-                DateTime day = start.AddDays(i);
                 decimal total = OrderService.All
-                    .Where(order => order.Date.Date == day.Date && order.Status == "Completed")
+                    .Where(order => order.Date.Date == day
+                        && string.Equals(order.Status, "Completed", StringComparison.OrdinalIgnoreCase))
                     .Sum(order => order.Total);
                 series.Points.AddXY(day.ToString("ddd"), (double)total);
             }
-            chartSales.Series.Add(series);
+        }
+
+        private static void ConfigureChartArea(ChartArea area)
+        {
+            area.BackColor = Color.White;
+            area.Position.Auto = false;
+            area.Position.X = 4;
+            area.Position.Y = 8;
+            area.Position.Width = 92;
+            area.Position.Height = 82;
+            area.InnerPlotPosition.Auto = false;
+            area.InnerPlotPosition.X = 8;
+            area.InnerPlotPosition.Y = 8;
+            area.InnerPlotPosition.Width = 84;
+            area.InnerPlotPosition.Height = 84;
         }
 
         // Lists the six most recent orders in the activity panel

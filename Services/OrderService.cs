@@ -156,5 +156,48 @@ namespace DeskWise.Services
         {
             return _orders.OrderByDescending(order => order.Date).Take(count);
         }
+
+        // Rolling 7-day window for the dashboard chart. Anchors to the latest completed
+        // order when the calendar window has no sales (e.g. mock data ends before today).
+        public static void GetSalesChartWindow(out DateTime start, out DateTime end)
+        {
+            end = DateTime.Today;
+            start = end.AddDays(-6);
+
+            decimal windowTotal = SumCompletedBetween(start, end);
+            if (windowTotal > 0)
+            {
+                return;
+            }
+
+            Order latestCompleted = _orders
+                .Where(order => IsCompleted(order))
+                .OrderByDescending(order => order.Date)
+                .FirstOrDefault();
+
+            if (latestCompleted == null)
+            {
+                return;
+            }
+
+            end = latestCompleted.Date.Date;
+            start = end.AddDays(-6);
+        }
+
+        // Sum of completed order totals for each day in an inclusive date range.
+        public static decimal SumCompletedBetween(DateTime start, DateTime end)
+        {
+            DateTime from = start.Date;
+            DateTime to = end.Date;
+            return _orders
+                .Where(order => IsCompleted(order) && order.Date.Date >= from && order.Date.Date <= to)
+                .Sum(order => order.Total);
+        }
+
+        private static bool IsCompleted(Order order)
+        {
+            return order != null
+                && string.Equals(order.Status, "Completed", StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DeskWise.Forms;
@@ -31,6 +32,7 @@ namespace DeskWise.Controls
                 return;
             }
             SetupGrid();
+            SetupPermissionsGrid();
             RefreshGrid();
         }
 
@@ -52,6 +54,61 @@ namespace DeskWise.Controls
             dgvUsers.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvUsers.MultiSelect = false;
             dgvUsers.CellDoubleClick += (sender, args) => { if (args.RowIndex >= 0) EditSelected(); };
+        }
+
+        // Configures the role-permission matrix grid at the bottom of the screen.
+
+        private void SetupPermissionsGrid()
+        {
+            dgvPermissions.AutoGenerateColumns = false;
+            dgvPermissions.Columns.Clear();
+            dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Feature", HeaderText = "Feature", FillWeight = 180 });
+            DataGridViewCellStyle permissionCellStyle = new DataGridViewCellStyle
+            {
+                Alignment = DataGridViewContentAlignment.MiddleCenter,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold)
+            };
+            dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Admin",
+                HeaderText = "Admin",
+                FillWeight = 70,
+                DefaultCellStyle = permissionCellStyle
+            });
+            dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Manager",
+                HeaderText = "Manager",
+                FillWeight = 70,
+                DefaultCellStyle = permissionCellStyle
+            });
+            dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Employee",
+                HeaderText = "Employee",
+                FillWeight = 70,
+                DefaultCellStyle = permissionCellStyle
+            });
+            dgvPermissions.CellFormatting += DgvPermissions_CellFormatting;
+            dgvPermissions.DataSource = RolePermissionService.All.ToList();
+        }
+
+        private void DgvPermissions_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 1)
+            {
+                return;
+            }
+
+            string value = e.Value as string;
+            if (value == RolePermissionService.Allowed)
+            {
+                e.CellStyle.ForeColor = Color.FromArgb(22, 163, 74);
+            }
+            else if (value == RolePermissionService.Denied)
+            {
+                e.CellStyle.ForeColor = Color.FromArgb(220, 38, 38);
+            }
         }
 
         // Binds all users from AuthService to the grid

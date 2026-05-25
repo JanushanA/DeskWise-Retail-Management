@@ -29,6 +29,7 @@ namespace DeskWise.Controls
 
         private void OrderHistoryControl_Load(object sender, EventArgs e)
         {
+            TextBoxHelper.SetSearchPlaceholder(txtSearch);
             SetupGrid();
             PopulateFilters();
             ApplyRolePermissions();
@@ -67,7 +68,7 @@ namespace DeskWise.Controls
             cmbPayment.Items.Clear();
             cmbPayment.Items.AddRange(new object[] { "All", "Cash", "Card", "Split Pay", "Store Credit" });
             cmbPayment.SelectedIndex = 0;
-            dtpFrom.Value = DateTime.Today.AddDays(-30);
+            dtpFrom.Value = DateTime.Today.AddDays(-365);
             dtpTo.Value = DateTime.Today;
         }
 
@@ -141,7 +142,7 @@ namespace DeskWise.Controls
             txtSearch.Text = string.Empty;
             cmbStatus.SelectedIndex = 0;
             cmbPayment.SelectedIndex = 0;
-            dtpFrom.Value = DateTime.Today.AddDays(-30);
+            dtpFrom.Value = DateTime.Today.AddDays(-365);
             dtpTo.Value = DateTime.Today;
             ApplyFilter();
         }
@@ -167,7 +168,7 @@ namespace DeskWise.Controls
             }
             try
             {
-                string path = Path.Combine(FileService.ReceiptsDirectory, selectedOrder.OrderId + ".txt");
+                string path = ReceiptService.GetReceiptPath(selectedOrder.OrderId);
                 if (!File.Exists(path))
                 {
                     path = ReceiptService.SaveToFile(selectedOrder);

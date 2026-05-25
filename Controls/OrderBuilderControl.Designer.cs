@@ -19,7 +19,7 @@ namespace DeskWise.Controls
         {
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.lblCustomer = new System.Windows.Forms.Label();
+            this.cmbCustomer = new System.Windows.Forms.ComboBox();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.pnlLeft = new System.Windows.Forms.Panel();
             this.lblCatalog = new System.Windows.Forms.Label();
@@ -39,7 +39,6 @@ namespace DeskWise.Controls
             this.lblTotalCaption = new System.Windows.Forms.Label();
             this.lblTotal = new System.Windows.Forms.Label();
             this.pnlActions = new System.Windows.Forms.Panel();
-            this.btnAddCustomer = new System.Windows.Forms.Button();
             this.btnApplyDiscount = new System.Windows.Forms.Button();
             this.btnHoldOrder = new System.Windows.Forms.Button();
             this.btnClearCart = new System.Windows.Forms.Button();
@@ -57,23 +56,24 @@ namespace DeskWise.Controls
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.White;
-            this.pnlHeader.Controls.Add(this.lblCustomer);
+            this.pnlHeader.Controls.Add(this.cmbCustomer);
             this.pnlHeader.Controls.Add(this.lblTitle);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Padding = new System.Windows.Forms.Padding(20, 12, 20, 12);
-            this.pnlHeader.Size = new System.Drawing.Size(1100, 50);
+            this.pnlHeader.Size = new System.Drawing.Size(1100, 56);
             // 
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-            this.lblTitle.Location = new System.Drawing.Point(20, 8);
+            this.lblTitle.Location = new System.Drawing.Point(20, 14);
             this.lblTitle.Text = "Build Order";
             // 
-            this.lblCustomer.AutoSize = true;
-            this.lblCustomer.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblCustomer.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-            this.lblCustomer.Location = new System.Drawing.Point(900, 18);
-            this.lblCustomer.Text = "Customer: Walk-in";
+            this.cmbCustomer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbCustomer.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.cmbCustomer.Location = new System.Drawing.Point(720, 16);
+            this.cmbCustomer.Name = "cmbCustomer";
+            this.cmbCustomer.Size = new System.Drawing.Size(360, 25);
+            this.cmbCustomer.SelectedIndexChanged += new System.EventHandler(this.cmbCustomer_SelectedIndexChanged);
             // 
             // pnlMain
             // 
@@ -213,23 +213,13 @@ namespace DeskWise.Controls
             this.pnlActions.Controls.Add(this.btnClearCart);
             this.pnlActions.Controls.Add(this.btnHoldOrder);
             this.pnlActions.Controls.Add(this.btnApplyDiscount);
-            this.pnlActions.Controls.Add(this.btnAddCustomer);
             this.pnlActions.Location = new System.Drawing.Point(15, 515);
             this.pnlActions.Size = new System.Drawing.Size(455, 95);
-            // 
-            this.btnAddCustomer.BackColor = System.Drawing.Color.FromArgb(241, 245, 249);
-            this.btnAddCustomer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddCustomer.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnAddCustomer.Location = new System.Drawing.Point(0, 0);
-            this.btnAddCustomer.Size = new System.Drawing.Size(110, 35);
-            this.btnAddCustomer.Text = "Add Customer";
-            this.btnAddCustomer.UseVisualStyleBackColor = false;
-            this.btnAddCustomer.Click += new System.EventHandler(this.btnAddCustomer_Click);
             // 
             this.btnApplyDiscount.BackColor = System.Drawing.Color.FromArgb(241, 245, 249);
             this.btnApplyDiscount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnApplyDiscount.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnApplyDiscount.Location = new System.Drawing.Point(115, 0);
+            this.btnApplyDiscount.Location = new System.Drawing.Point(0, 0);
             this.btnApplyDiscount.Size = new System.Drawing.Size(110, 35);
             this.btnApplyDiscount.Text = "Apply Discount";
             this.btnApplyDiscount.UseVisualStyleBackColor = false;
@@ -238,7 +228,7 @@ namespace DeskWise.Controls
             this.btnHoldOrder.BackColor = System.Drawing.Color.FromArgb(241, 245, 249);
             this.btnHoldOrder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHoldOrder.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnHoldOrder.Location = new System.Drawing.Point(230, 0);
+            this.btnHoldOrder.Location = new System.Drawing.Point(115, 0);
             this.btnHoldOrder.Size = new System.Drawing.Size(110, 35);
             this.btnHoldOrder.Text = "Hold Order";
             this.btnHoldOrder.UseVisualStyleBackColor = false;
@@ -248,7 +238,7 @@ namespace DeskWise.Controls
             this.btnClearCart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClearCart.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnClearCart.ForeColor = System.Drawing.Color.FromArgb(153, 27, 27);
-            this.btnClearCart.Location = new System.Drawing.Point(345, 0);
+            this.btnClearCart.Location = new System.Drawing.Point(230, 0);
             this.btnClearCart.Size = new System.Drawing.Size(110, 35);
             this.btnClearCart.Text = "Clear Cart";
             this.btnClearCart.UseVisualStyleBackColor = false;
@@ -293,7 +283,7 @@ namespace DeskWise.Controls
 
         private System.Windows.Forms.Panel pnlHeader;
         private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.Label lblCustomer;
+        private System.Windows.Forms.ComboBox cmbCustomer;
         private System.Windows.Forms.Panel pnlMain;
         private System.Windows.Forms.Panel pnlLeft;
         private System.Windows.Forms.Label lblCatalog;
@@ -313,7 +303,6 @@ namespace DeskWise.Controls
         private System.Windows.Forms.Label lblTotalCaption;
         private System.Windows.Forms.Label lblTotal;
         private System.Windows.Forms.Panel pnlActions;
-        private System.Windows.Forms.Button btnAddCustomer;
         private System.Windows.Forms.Button btnApplyDiscount;
         private System.Windows.Forms.Button btnHoldOrder;
         private System.Windows.Forms.Button btnClearCart;

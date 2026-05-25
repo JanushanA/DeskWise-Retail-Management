@@ -23,6 +23,7 @@ namespace DeskWise.Controls
 
         private void SupplierControl_Load(object sender, System.EventArgs e)
         {
+            TextBoxHelper.SetSearchPlaceholder(txtSearch);
             SetupGrid();
             ApplyRoleRestrictions();
             RefreshGrid();

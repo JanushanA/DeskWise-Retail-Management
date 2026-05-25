@@ -107,6 +107,7 @@ namespace DeskWise.Forms
             };
 
             txtSearch.TextChanged += TxtSearch_TextChanged;
+            TextBoxHelper.SetSearchPlaceholder(txtSearch);
 
 
 

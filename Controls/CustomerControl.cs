@@ -25,6 +25,7 @@ namespace DeskWise.Controls
 
         private void CustomerControl_Load(object sender, EventArgs e)
         {
+            TextBoxHelper.SetSearchPlaceholder(txtSearch);
             SetupGrid();
             ApplyRoleRestrictions();
             RefreshGrid();

@@ -25,6 +25,7 @@ namespace DeskWise.Controls
 
         private void PurchaseOrdersControl_Load(object sender, EventArgs e)
         {
+            TextBoxHelper.SetSearchPlaceholder(txtSearch);
             SetupGrid();
             PopulateFilters();
             ApplyRoleRestrictions();

@@ -26,12 +26,22 @@ namespace DeskWise.Controls
             this.dgvSummary = new System.Windows.Forms.DataGridView();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.lblCustomerCaption = new System.Windows.Forms.Label();
-            this.lblCustomerName = new System.Windows.Forms.Label();
+            this.cmbCustomer = new System.Windows.Forms.ComboBox();
             this.lblPaymentCaption = new System.Windows.Forms.Label();
             this.rbCash = new System.Windows.Forms.RadioButton();
             this.rbCard = new System.Windows.Forms.RadioButton();
             this.rbSplit = new System.Windows.Forms.RadioButton();
             this.rbStoreCredit = new System.Windows.Forms.RadioButton();
+            this.pnlCardDetails = new System.Windows.Forms.Panel();
+            this.lblCardNumber = new System.Windows.Forms.Label();
+            this.txtCardNumber = new System.Windows.Forms.TextBox();
+            this.lblCardExpiry = new System.Windows.Forms.Label();
+            this.txtCardExpiry = new System.Windows.Forms.TextBox();
+            this.lblCardCvv = new System.Windows.Forms.Label();
+            this.txtCardCvv = new System.Windows.Forms.TextBox();
+            this.lblCardName = new System.Windows.Forms.Label();
+            this.txtCardName = new System.Windows.Forms.TextBox();
+            this.lblCardExample = new System.Windows.Forms.Label();
             this.pnlTotals = new System.Windows.Forms.Panel();
             this.lblSubtotalCaption = new System.Windows.Forms.Label();
             this.lblSubtotal = new System.Windows.Forms.Label();
@@ -120,12 +130,13 @@ namespace DeskWise.Controls
             this.pnlRight.Controls.Add(this.txtReceipt);
             this.pnlRight.Controls.Add(this.lblReceiptCaption);
             this.pnlRight.Controls.Add(this.pnlTotals);
+            this.pnlRight.Controls.Add(this.pnlCardDetails);
             this.pnlRight.Controls.Add(this.rbStoreCredit);
             this.pnlRight.Controls.Add(this.rbSplit);
             this.pnlRight.Controls.Add(this.rbCard);
             this.pnlRight.Controls.Add(this.rbCash);
             this.pnlRight.Controls.Add(this.lblPaymentCaption);
-            this.pnlRight.Controls.Add(this.lblCustomerName);
+            this.pnlRight.Controls.Add(this.cmbCustomer);
             this.pnlRight.Controls.Add(this.lblCustomerCaption);
             this.pnlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlRight.Location = new System.Drawing.Point(590, 12);
@@ -138,38 +149,106 @@ namespace DeskWise.Controls
             this.lblCustomerCaption.Location = new System.Drawing.Point(15, 14);
             this.lblCustomerCaption.Text = "Customer";
             // 
-            this.lblCustomerName.AutoSize = true;
-            this.lblCustomerName.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblCustomerName.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
-            this.lblCustomerName.Location = new System.Drawing.Point(17, 38);
-            this.lblCustomerName.Text = "Walk-in Customer";
+            // cmbCustomer
+            // 
+            this.cmbCustomer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbCustomer.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.cmbCustomer.Location = new System.Drawing.Point(15, 36);
+            this.cmbCustomer.Name = "cmbCustomer";
+            this.cmbCustomer.Size = new System.Drawing.Size(455, 25);
+            this.cmbCustomer.SelectedIndexChanged += new System.EventHandler(this.cmbCustomer_SelectedIndexChanged);
             // 
             this.lblPaymentCaption.AutoSize = true;
             this.lblPaymentCaption.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.lblPaymentCaption.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-            this.lblPaymentCaption.Location = new System.Drawing.Point(15, 68);
+            this.lblPaymentCaption.Location = new System.Drawing.Point(15, 72);
             this.lblPaymentCaption.Text = "Payment Method";
             // 
             this.rbCash.AutoSize = true;
             this.rbCash.Checked = true;
             this.rbCash.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.rbCash.Location = new System.Drawing.Point(20, 92);
+            this.rbCash.Location = new System.Drawing.Point(20, 96);
             this.rbCash.Text = "Cash";
+            this.rbCash.CheckedChanged += new System.EventHandler(this.PaymentMethodChanged);
             // 
             this.rbCard.AutoSize = true;
             this.rbCard.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.rbCard.Location = new System.Drawing.Point(110, 92);
+            this.rbCard.Location = new System.Drawing.Point(110, 96);
             this.rbCard.Text = "Card";
+            this.rbCard.CheckedChanged += new System.EventHandler(this.PaymentMethodChanged);
             // 
             this.rbSplit.AutoSize = true;
             this.rbSplit.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.rbSplit.Location = new System.Drawing.Point(200, 92);
+            this.rbSplit.Location = new System.Drawing.Point(200, 96);
             this.rbSplit.Text = "Split Pay";
+            this.rbSplit.CheckedChanged += new System.EventHandler(this.PaymentMethodChanged);
             // 
             this.rbStoreCredit.AutoSize = true;
             this.rbStoreCredit.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.rbStoreCredit.Location = new System.Drawing.Point(300, 92);
+            this.rbStoreCredit.Location = new System.Drawing.Point(300, 96);
             this.rbStoreCredit.Text = "Store Credit";
+            this.rbStoreCredit.CheckedChanged += new System.EventHandler(this.PaymentMethodChanged);
+            // 
+            // pnlCardDetails
+            // 
+            this.pnlCardDetails.Controls.Add(this.lblCardExample);
+            this.pnlCardDetails.Controls.Add(this.txtCardName);
+            this.pnlCardDetails.Controls.Add(this.lblCardName);
+            this.pnlCardDetails.Controls.Add(this.txtCardCvv);
+            this.pnlCardDetails.Controls.Add(this.lblCardCvv);
+            this.pnlCardDetails.Controls.Add(this.txtCardExpiry);
+            this.pnlCardDetails.Controls.Add(this.lblCardExpiry);
+            this.pnlCardDetails.Controls.Add(this.txtCardNumber);
+            this.pnlCardDetails.Controls.Add(this.lblCardNumber);
+            this.pnlCardDetails.Location = new System.Drawing.Point(15, 124);
+            this.pnlCardDetails.Name = "pnlCardDetails";
+            this.pnlCardDetails.Size = new System.Drawing.Size(455, 136);
+            this.pnlCardDetails.Visible = false;
+            // 
+            this.lblCardNumber.AutoSize = true;
+            this.lblCardNumber.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblCardNumber.Location = new System.Drawing.Point(0, 4);
+            this.lblCardNumber.Text = "Card Number";
+            // 
+            this.txtCardNumber.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.txtCardNumber.Location = new System.Drawing.Point(0, 22);
+            this.txtCardNumber.MaxLength = 19;
+            this.txtCardNumber.Size = new System.Drawing.Size(280, 25);
+            // 
+            this.lblCardExpiry.AutoSize = true;
+            this.lblCardExpiry.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblCardExpiry.Location = new System.Drawing.Point(290, 4);
+            this.lblCardExpiry.Text = "Expiry (MM/YY)";
+            // 
+            this.txtCardExpiry.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.txtCardExpiry.Location = new System.Drawing.Point(290, 22);
+            this.txtCardExpiry.MaxLength = 7;
+            this.txtCardExpiry.Size = new System.Drawing.Size(80, 25);
+            // 
+            this.lblCardCvv.AutoSize = true;
+            this.lblCardCvv.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblCardCvv.Location = new System.Drawing.Point(378, 4);
+            this.lblCardCvv.Text = "CVV";
+            // 
+            this.txtCardCvv.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.txtCardCvv.Location = new System.Drawing.Point(378, 22);
+            this.txtCardCvv.MaxLength = 4;
+            this.txtCardCvv.Size = new System.Drawing.Size(70, 25);
+            // 
+            this.lblCardName.AutoSize = true;
+            this.lblCardName.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblCardName.Location = new System.Drawing.Point(0, 54);
+            this.lblCardName.Text = "Name on Card";
+            // 
+            this.txtCardName.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.txtCardName.Location = new System.Drawing.Point(0, 72);
+            this.txtCardName.Size = new System.Drawing.Size(448, 25);
+            // 
+            this.lblCardExample.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.lblCardExample.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+            this.lblCardExample.Location = new System.Drawing.Point(0, 100);
+            this.lblCardExample.Size = new System.Drawing.Size(448, 32);
+            this.lblCardExample.Text = "Example (Visa): 4111 1111 1111 1111 · 12/28 · CVV 123 · Jane Doe";
             // 
             // pnlTotals
             // 
@@ -182,7 +261,7 @@ namespace DeskWise.Controls
             this.pnlTotals.Controls.Add(this.lblDiscount);
             this.pnlTotals.Controls.Add(this.lblSubtotalCaption);
             this.pnlTotals.Controls.Add(this.lblSubtotal);
-            this.pnlTotals.Location = new System.Drawing.Point(15, 130);
+            this.pnlTotals.Location = new System.Drawing.Point(15, 266);
             this.pnlTotals.Size = new System.Drawing.Size(455, 130);
             // 
             this.lblSubtotalCaption.AutoSize = true;
@@ -229,24 +308,24 @@ namespace DeskWise.Controls
             this.lblReceiptCaption.AutoSize = true;
             this.lblReceiptCaption.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.lblReceiptCaption.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-            this.lblReceiptCaption.Location = new System.Drawing.Point(15, 268);
+            this.lblReceiptCaption.Location = new System.Drawing.Point(15, 404);
             this.lblReceiptCaption.Text = "Receipt Preview";
             // 
             this.txtReceipt.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
             this.txtReceipt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtReceipt.Font = new System.Drawing.Font("Consolas", 9F);
-            this.txtReceipt.Location = new System.Drawing.Point(15, 292);
+            this.txtReceipt.Location = new System.Drawing.Point(15, 428);
             this.txtReceipt.Multiline = true;
             this.txtReceipt.ReadOnly = true;
             this.txtReceipt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtReceipt.Size = new System.Drawing.Size(455, 200);
+            this.txtReceipt.Size = new System.Drawing.Size(455, 118);
             // 
             // pnlActions
             // 
             this.pnlActions.Controls.Add(this.btnConfirm);
             this.pnlActions.Controls.Add(this.btnPrint);
             this.pnlActions.Controls.Add(this.btnCancel);
-            this.pnlActions.Location = new System.Drawing.Point(15, 500);
+            this.pnlActions.Location = new System.Drawing.Point(15, 554);
             this.pnlActions.Size = new System.Drawing.Size(455, 100);
             // 
             this.btnCancel.BackColor = System.Drawing.Color.FromArgb(254, 226, 226);
@@ -313,12 +392,22 @@ namespace DeskWise.Controls
         private System.Windows.Forms.DataGridView dgvSummary;
         private System.Windows.Forms.Panel pnlRight;
         private System.Windows.Forms.Label lblCustomerCaption;
-        private System.Windows.Forms.Label lblCustomerName;
+        private System.Windows.Forms.ComboBox cmbCustomer;
         private System.Windows.Forms.Label lblPaymentCaption;
         private System.Windows.Forms.RadioButton rbCash;
         private System.Windows.Forms.RadioButton rbCard;
         private System.Windows.Forms.RadioButton rbSplit;
         private System.Windows.Forms.RadioButton rbStoreCredit;
+        private System.Windows.Forms.Panel pnlCardDetails;
+        private System.Windows.Forms.Label lblCardNumber;
+        private System.Windows.Forms.TextBox txtCardNumber;
+        private System.Windows.Forms.Label lblCardExpiry;
+        private System.Windows.Forms.TextBox txtCardExpiry;
+        private System.Windows.Forms.Label lblCardCvv;
+        private System.Windows.Forms.TextBox txtCardCvv;
+        private System.Windows.Forms.Label lblCardName;
+        private System.Windows.Forms.TextBox txtCardName;
+        private System.Windows.Forms.Label lblCardExample;
         private System.Windows.Forms.Panel pnlTotals;
         private System.Windows.Forms.Label lblSubtotalCaption;
         private System.Windows.Forms.Label lblSubtotal;

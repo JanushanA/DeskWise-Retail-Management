@@ -34,6 +34,7 @@ namespace DeskWise.Controls
 
         private void InventoryControl_Load(object sender, EventArgs e)
         {
+            TextBoxHelper.SetSearchPlaceholder(txtSearch);
             SetupGrid();
             PopulateFilterDropdowns();
             ApplyRoleRestrictions();

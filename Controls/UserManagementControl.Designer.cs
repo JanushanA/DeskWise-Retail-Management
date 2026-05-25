@@ -31,8 +31,9 @@ namespace DeskWise.Controls
             this.dgvUsers = new DataGridView();
             this.pnlPermissions = new Panel();
             this.lblPermissionsTitle = new Label();
-            this.lblPermissionsBody = new Label();
+            this.dgvPermissions = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsers)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPermissions)).BeginInit();
             this.SuspendLayout();
 
             // header
@@ -136,9 +137,9 @@ namespace DeskWise.Controls
             this.pnlPermissions.Dock = DockStyle.Bottom;
             this.pnlPermissions.BackColor = Color.White;
             this.pnlPermissions.BorderStyle = BorderStyle.FixedSingle;
-            this.pnlPermissions.Height = 140;
+            this.pnlPermissions.Height = 220;
             this.pnlPermissions.Padding = new Padding(20, 10, 20, 10);
-            this.pnlPermissions.Controls.Add(this.lblPermissionsBody);
+            this.pnlPermissions.Controls.Add(this.dgvPermissions);
             this.pnlPermissions.Controls.Add(this.lblPermissionsTitle);
 
             this.lblPermissionsTitle.AutoSize = true;
@@ -147,15 +148,19 @@ namespace DeskWise.Controls
             this.lblPermissionsTitle.Location = new Point(20, 8);
             this.lblPermissionsTitle.Text = "Role Permissions";
 
-            this.lblPermissionsBody.AutoSize = false;
-            this.lblPermissionsBody.Dock = DockStyle.Fill;
-            this.lblPermissionsBody.Font = new Font("Consolas", 9F);
-            this.lblPermissionsBody.ForeColor = Color.FromArgb(71, 85, 105);
-            this.lblPermissionsBody.Padding = new Padding(20, 30, 20, 10);
-            this.lblPermissionsBody.Text =
-                "Admin     : All screens, manage users, settings, refunds, purchase orders, reports.\r\n" +
-                "Manager   : Inventory, orders, customers, suppliers, purchase orders, reports, alerts.\r\n" +
-                "Employee  : Dashboard, view-only inventory, build orders, checkout, view order history.";
+            this.dgvPermissions.AllowUserToAddRows = false;
+            this.dgvPermissions.AllowUserToDeleteRows = false;
+            this.dgvPermissions.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvPermissions.BackgroundColor = Color.White;
+            this.dgvPermissions.BorderStyle = BorderStyle.None;
+            this.dgvPermissions.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(241, 245, 249);
+            this.dgvPermissions.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 9F);
+            this.dgvPermissions.Dock = DockStyle.Bottom;
+            this.dgvPermissions.EnableHeadersVisualStyles = false;
+            this.dgvPermissions.Height = 175;
+            this.dgvPermissions.ReadOnly = true;
+            this.dgvPermissions.RowHeadersVisible = false;
+            this.dgvPermissions.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
             // control
             this.AutoScaleDimensions = new SizeF(6F, 13F);
@@ -169,6 +174,7 @@ namespace DeskWise.Controls
             this.Size = new Size(1100, 700);
             this.Load += new System.EventHandler(this.UserManagementControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsers)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPermissions)).EndInit();
             this.ResumeLayout(false);
         }
         #endregion
@@ -185,6 +191,6 @@ namespace DeskWise.Controls
         private DataGridView dgvUsers;
         private Panel pnlPermissions;
         private Label lblPermissionsTitle;
-        private Label lblPermissionsBody;
+        private DataGridView dgvPermissions;
     }
 }

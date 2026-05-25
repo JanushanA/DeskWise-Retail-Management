@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using DeskWise;
 using DeskWise.Models;
@@ -19,6 +20,8 @@ namespace DeskWise.Controls
 
         private bool _completed;
 
+        private bool _loadingCustomers;
+
         // Initializes checkout summary grid and payment controls
 
         public CheckoutControl()
@@ -32,7 +35,6 @@ namespace DeskWise.Controls
         {
             _pending = AppState.PendingOrder;
 
-            // If somebody opened Checkout directly without a pending order, bounce them back.
             if (_pending == null || _pending.Items == null || _pending.Items.Count == 0)
             {
                 MessageBox.Show("No order is ready for checkout. Build an order first.",
@@ -42,7 +44,8 @@ namespace DeskWise.Controls
             }
             SetupGrid();
             BindOrderToGrid();
-            UpdateCustomerLabel();
+            PopulateCustomers();
+            UpdateCardPanelVisibility();
             RecalculateAndShow();
             RefreshReceiptPreview();
         }
@@ -68,13 +71,67 @@ namespace DeskWise.Controls
             dgvSummary.DataSource = _pending.Items;
         }
 
-        // Shows customer name or walk-in label on the checkout header
+        // Fills customer combo with walk-in option and registered customers
 
-        private void UpdateCustomerLabel()
+        private void PopulateCustomers()
         {
-            lblCustomerName.Text = string.IsNullOrWhiteSpace(_pending.CustomerName)
-                ? "Walk-in Customer"
-                : _pending.CustomerName;
+            _loadingCustomers = true;
+            cmbCustomer.DisplayMember = "Name";
+            cmbCustomer.ValueMember = "Id";
+            cmbCustomer.Items.Clear();
+            cmbCustomer.Items.Add(new Customer { Id = 0, Name = "Walk-in Customer" });
+            foreach (Customer customer in CustomerService.All.OrderBy(c => c.Name))
+            {
+                cmbCustomer.Items.Add(customer);
+            }
+
+            Customer match = cmbCustomer.Items.Cast<Customer>()
+                .FirstOrDefault(c => c.Id == _pending.CustomerId && _pending.CustomerId > 0);
+            if (match != null)
+            {
+                cmbCustomer.SelectedItem = match;
+            }
+            else if (!string.IsNullOrWhiteSpace(_pending.CustomerName) &&
+                     _pending.CustomerName != "Walk-in Customer")
+            {
+                Customer byName = cmbCustomer.Items.Cast<Customer>()
+                    .FirstOrDefault(c => string.Equals(c.Name, _pending.CustomerName, StringComparison.OrdinalIgnoreCase));
+                cmbCustomer.SelectedItem = byName ?? cmbCustomer.Items[0];
+            }
+            else
+            {
+                cmbCustomer.SelectedIndex = 0;
+            }
+            _loadingCustomers = false;
+            ApplySelectedCustomer();
+        }
+
+        // Writes selected customer onto the pending order
+
+        private void ApplySelectedCustomer()
+        {
+            Customer selected = cmbCustomer.SelectedItem as Customer;
+            if (selected == null || _pending == null) return;
+            _pending.CustomerId = selected.Id;
+            _pending.CustomerName = selected.Id == 0 ? "Walk-in Customer" : selected.Name;
+            RefreshReceiptPreview();
+        }
+
+        private void cmbCustomer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_loadingCustomers || _pending == null) return;
+            ApplySelectedCustomer();
+        }
+
+        private void PaymentMethodChanged(object sender, EventArgs e)
+        {
+            UpdateCardPanelVisibility();
+            RefreshReceiptPreview();
+        }
+
+        private void UpdateCardPanelVisibility()
+        {
+            pnlCardDetails.Visible = rbCard.Checked || rbSplit.Checked;
         }
 
         // Recalculates tax and totals from settings, then updates summary labels
@@ -98,13 +155,48 @@ namespace DeskWise.Controls
             return "Cash";
         }
 
+        // Validates card fields when card or split payment is selected
+
+        private bool ValidateCardPayment(out string error)
+        {
+            error = string.Empty;
+            if (!rbCard.Checked && !rbSplit.Checked) return true;
+
+            if (string.IsNullOrWhiteSpace(txtCardName.Text))
+            {
+                error = "Enter the name on the card.";
+                txtCardName.Focus();
+                return false;
+            }
+
+            string brand;
+            if (!ValidationService.IsValidCardNumber(txtCardNumber.Text, out brand, out error))
+            {
+                txtCardNumber.Focus();
+                return false;
+            }
+
+            if (!ValidationService.IsValidCardExpiry(txtCardExpiry.Text, out error))
+            {
+                txtCardExpiry.Focus();
+                return false;
+            }
+
+            if (!ValidationService.IsValidCardCvv(txtCardCvv.Text, brand, out error))
+            {
+                txtCardCvv.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
         // Builds receipt text preview with payment method and staff name filled in
 
         private void RefreshReceiptPreview()
         {
             _pending.PaymentMethod = SelectedPaymentMethod();
 
-            // Stamp a preview-only id so the preview looks complete before we commit.
             if (string.IsNullOrEmpty(_pending.OrderId)) _pending.OrderId = "PREVIEW";
             if (string.IsNullOrEmpty(_pending.EmployeeUsername))
             {
@@ -113,7 +205,7 @@ namespace DeskWise.Controls
             txtReceipt.Text = ReceiptService.Build(_pending);
         }
 
-        // Completes the sale, saves receipt file, and locks confirm until user leaves
+        // Completes the sale, saves receipt PDF, and locks confirm until user leaves
 
         private void btnConfirm_Click(object sender, EventArgs e)
         {
@@ -123,9 +215,16 @@ namespace DeskWise.Controls
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+            string cardError;
+            if (!ValidateCardPayment(out cardError))
+            {
+                MessageBox.Show(cardError, "Card Details", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             _pending.PaymentMethod = SelectedPaymentMethod();
 
-            // Reset the preview id - OrderService.Complete generates the real one.
             if (_pending.OrderId == "PREVIEW") _pending.OrderId = string.Empty;
             try
             {
@@ -136,7 +235,6 @@ namespace DeskWise.Controls
                 _completed = true;
                 AppState.PendingOrder = null;
 
-                // Reflect the saved order in the preview (now with a real order id and totals).
                 txtReceipt.Text = ReceiptService.Build(completed);
                 lblSubtotal.Text = completed.Subtotal.ToString("C2");
                 lblDiscount.Text = completed.Discount.ToString("C2");
@@ -160,7 +258,7 @@ namespace DeskWise.Controls
             }
         }
 
-        // Opens saved receipt file, or writes a temp preview file if sale not yet completed
+        // Opens saved receipt PDF, or writes a temp preview file if sale not yet completed
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
@@ -168,16 +266,20 @@ namespace DeskWise.Controls
             {
                 if (!_completed)
                 {
-
-                    // Save a preview to a temp file so the user can open it.
-                    string previewPath = Path.Combine(FileService.ReceiptsDirectory, "PREVIEW.txt");
+                    string previewPath = Path.Combine(FileService.ReceiptsDirectory, "PREVIEW.pdf");
                     FileService.EnsureDirectory(FileService.ReceiptsDirectory);
-                    FileService.WriteText(previewPath, txtReceipt.Text);
+                    ReceiptService.SaveTextAsPdf(previewPath, txtReceipt.Text);
                     Process.Start(previewPath);
                     return;
                 }
-                string saved = Path.Combine(FileService.ReceiptsDirectory, _pending.OrderId + ".txt");
-                if (File.Exists(saved)) Process.Start(saved);
+                string saved = ReceiptService.GetReceiptPath(_pending.OrderId);
+                if (File.Exists(saved))
+                {
+                    Process.Start(saved);
+                    return;
+                }
+                saved = ReceiptService.SaveToFile(_pending);
+                Process.Start(saved);
             }
             catch (Exception ex)
             {

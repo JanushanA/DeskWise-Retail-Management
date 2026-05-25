@@ -18,28 +18,27 @@ namespace DeskWise.Controls
     public partial class OrderBuilderControl : UserControl
     {
 
-        // BindingList lets the grid auto-refresh when items are added/removed.
-
         private readonly BindingList<OrderItem> _cart = new BindingList<OrderItem>();
 
         private decimal _discount;
 
         private Customer _selectedCustomer;
 
-        // Initializes catalogue and cart grids
+        private int _dragRowIndex = -1;
+
+        private bool _loadingCustomers;
 
         public OrderBuilderControl()
         {
             InitializeComponent();
         }
 
-        // Restores held order from AppState if present, then loads catalogue and totals
-
         private void OrderBuilderControl_Load(object sender, EventArgs e)
         {
+            TextBoxHelper.SetSearchPlaceholder(txtSearch);
             SetupGrids();
+            PopulateCustomers();
 
-            // If we're resuming a previously held order, restore it.
             if (AppState.PendingOrder != null && AppState.PendingOrder.Items != null)
             {
                 foreach (OrderItem pendingLine in AppState.PendingOrder.Items) _cart.Add(pendingLine);
@@ -47,20 +46,16 @@ namespace DeskWise.Controls
                 if (AppState.PendingOrder.CustomerId > 0)
                 {
                     _selectedCustomer = CustomerService.GetById(AppState.PendingOrder.CustomerId);
+                    SelectCustomerInCombo(_selectedCustomer);
                 }
             }
             RefreshCatalog();
             RefreshCart();
-            UpdateCustomerLabel();
             RecalculateTotals();
         }
 
-        // Configures catalogue grid (left) and editable cart grid (right)
-
         private void SetupGrids()
         {
-
-            // Catalogue grid (left).
             dgvCatalog.AutoGenerateColumns = false;
             dgvCatalog.Columns.Clear();
             dgvCatalog.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id",        HeaderText = "ID",    Width = 50 });
@@ -75,8 +70,9 @@ namespace DeskWise.Controls
             dgvCatalog.MultiSelect = false;
             dgvCatalog.BackgroundColor = Color.White;
             dgvCatalog.CellDoubleClick += (sender, args) => { if (args.RowIndex >= 0) AddSelectedToCart(); };
+            dgvCatalog.MouseDown += DgvCatalog_MouseDown;
+            dgvCatalog.MouseMove += DgvCatalog_MouseMove;
 
-            // Cart grid (right). Quantity is editable.
             dgvCart.AutoGenerateColumns = false;
             dgvCart.Columns.Clear();
             dgvCart.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "ProductName", HeaderText = "Product",  Width = 180, ReadOnly = true });
@@ -87,13 +83,81 @@ namespace DeskWise.Controls
             dgvCart.RowHeadersVisible = false;
             dgvCart.AllowUserToAddRows = false;
             dgvCart.BackgroundColor = Color.White;
+            dgvCart.AllowDrop = true;
             dgvCart.DataSource = _cart;
             dgvCart.CellEndEdit += DgvCart_CellEndEdit;
             dgvCart.CellContentClick += DgvCart_CellContentClick;
-            dgvCart.DataError += (sender, args) => { args.Cancel = true; }; // swallow type-conversion errors
+            dgvCart.DataError += (sender, args) => { args.Cancel = true; };
+            dgvCart.DragEnter += DgvCart_DragEnter;
+            dgvCart.DragDrop += DgvCart_DragDrop;
         }
 
-        // Filters product catalogue by search box and binds to left grid
+        private void DgvCatalog_MouseDown(object sender, MouseEventArgs e)
+        {
+            DataGridView.HitTestInfo hit = dgvCatalog.HitTest(e.X, e.Y);
+            _dragRowIndex = hit.RowIndex;
+        }
+
+        private void DgvCatalog_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left || _dragRowIndex < 0) return;
+            Product product = dgvCatalog.Rows[_dragRowIndex].DataBoundItem as Product;
+            if (product == null) return;
+            dgvCatalog.DoDragDrop(product, DragDropEffects.Copy);
+            _dragRowIndex = -1;
+        }
+
+        private void DgvCart_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(Product)))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        private void DgvCart_DragDrop(object sender, DragEventArgs e)
+        {
+            Product product = e.Data.GetData(typeof(Product)) as Product;
+            if (product != null) AddProductToCart(product);
+        }
+
+        private void PopulateCustomers()
+        {
+            _loadingCustomers = true;
+            cmbCustomer.DisplayMember = "Name";
+            cmbCustomer.Items.Clear();
+            cmbCustomer.Items.Add(new Customer { Id = 0, Name = "Walk-in Customer" });
+            foreach (Customer customer in CustomerService.All.OrderBy(c => c.Name))
+            {
+                cmbCustomer.Items.Add(customer);
+            }
+            cmbCustomer.SelectedIndex = 0;
+            _selectedCustomer = null;
+            _loadingCustomers = false;
+        }
+
+        private void SelectCustomerInCombo(Customer customer)
+        {
+            if (customer == null) return;
+            _loadingCustomers = true;
+            foreach (Customer item in cmbCustomer.Items)
+            {
+                if (item.Id == customer.Id)
+                {
+                    cmbCustomer.SelectedItem = item;
+                    break;
+                }
+            }
+            _loadingCustomers = false;
+            _selectedCustomer = customer;
+        }
+
+        private void cmbCustomer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_loadingCustomers) return;
+            Customer selected = cmbCustomer.SelectedItem as Customer;
+            _selectedCustomer = selected != null && selected.Id > 0 ? selected : null;
+        }
 
         private void RefreshCatalog()
         {
@@ -103,24 +167,11 @@ namespace DeskWise.Controls
             dgvCatalog.DataSource = filtered;
         }
 
-        // Rebinds cart grid to in-memory BindingList
-
         private void RefreshCart()
         {
             dgvCart.DataSource = null;
             dgvCart.DataSource = _cart;
         }
-
-        // Shows selected customer name and loyalty points, or walk-in label
-
-        private void UpdateCustomerLabel()
-        {
-            lblCustomer.Text = _selectedCustomer != null
-                ? "Customer: " + _selectedCustomer.Name + " (" + _selectedCustomer.LoyaltyPoints + " pts)"
-                : "Customer: Walk-in";
-        }
-
-        // Updates subtotal, discount, tax, and total labels via Order.RecalculateTotals
 
         private void RecalculateTotals()
         {
@@ -135,8 +186,6 @@ namespace DeskWise.Controls
             lblTax.Text      = temp.Tax.ToString("C2");
             lblTotal.Text    = temp.Total.ToString("C2");
         }
-
-        // Validates edited cart quantity against stock and refreshes totals
 
         private void DgvCart_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
@@ -155,8 +204,6 @@ namespace DeskWise.Controls
             RecalculateTotals();
         }
 
-        // Removes cart line when user clicks the X button column
-
         private void DgvCart_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.RowIndex >= _cart.Count) return;
@@ -165,12 +212,8 @@ namespace DeskWise.Controls
             RecalculateTotals();
         }
 
-        // Adds selected catalogue product to cart or increments quantity if already present
-
-        private void AddSelectedToCart()
+        private void AddProductToCart(Product selectedProduct)
         {
-            if (dgvCatalog.CurrentRow == null) return;
-            Product selectedProduct = dgvCatalog.CurrentRow.DataBoundItem as Product;
             if (selectedProduct == null) return;
             if (selectedProduct.Quantity <= 0)
             {
@@ -203,15 +246,15 @@ namespace DeskWise.Controls
             RecalculateTotals();
         }
 
-        // Refreshes catalogue when search text changes
+        private void AddSelectedToCart()
+        {
+            if (dgvCatalog.CurrentRow == null) return;
+            AddProductToCart(dgvCatalog.CurrentRow.DataBoundItem as Product);
+        }
 
         private void txtSearch_TextChanged(object sender, EventArgs e) { RefreshCatalog(); }
 
-        // Adds highlighted catalogue row to cart
-
         private void btnAddItem_Click(object sender, EventArgs e) { AddSelectedToCart(); }
-
-        // Prompts for dollar discount and recalculates totals
 
         private void btnApplyDiscount_Click(object sender, EventArgs e)
         {
@@ -228,39 +271,6 @@ namespace DeskWise.Controls
             RecalculateTotals();
         }
 
-        // Lets user pick a customer by numeric ID from a simple input dialog
-
-        private void btnAddCustomer_Click(object sender, EventArgs e)
-        {
-            if (CustomerService.All.Count == 0)
-            {
-                MessageBox.Show("No customers exist yet.", "No Customers",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            string listing = "Type the customer ID:\r\n\r\n" +
-                string.Join("\r\n", CustomerService.All.Select(customer => customer.Id + " - " + customer.Name));
-            string input = Microsoft.VisualBasic.Interaction.InputBox(listing, "Select Customer", "");
-            if (string.IsNullOrWhiteSpace(input)) return;
-            if (!int.TryParse(input, out int customerId))
-            {
-                MessageBox.Show("Please enter a numeric customer ID.", "Invalid",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            Customer selectedCustomer = CustomerService.GetById(customerId);
-            if (selectedCustomer == null)
-            {
-                MessageBox.Show("Customer not found.", "Not Found",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            _selectedCustomer = selectedCustomer;
-            UpdateCustomerLabel();
-        }
-
-        // Saves current cart to AppState.PendingOrder and clears the builder UI
-
         private void btnHoldOrder_Click(object sender, EventArgs e)
         {
             AppState.PendingOrder = BuildOrder();
@@ -269,11 +279,9 @@ namespace DeskWise.Controls
             _cart.Clear();
             _selectedCustomer = null;
             _discount = 0;
-            UpdateCustomerLabel();
+            cmbCustomer.SelectedIndex = 0;
             RecalculateTotals();
         }
-
-        // Clears cart, customer, discount, and pending order after confirmation
 
         private void btnClearCart_Click(object sender, EventArgs e)
         {
@@ -284,12 +292,10 @@ namespace DeskWise.Controls
             _cart.Clear();
             _discount = 0;
             _selectedCustomer = null;
+            cmbCustomer.SelectedIndex = 0;
             AppState.PendingOrder = null;
-            UpdateCustomerLabel();
             RecalculateTotals();
         }
-
-        // Stores order in AppState and navigates to Checkout screen
 
         private void btnCheckout_Click(object sender, EventArgs e)
         {
@@ -303,8 +309,6 @@ namespace DeskWise.Controls
             MainShellForm main = this.FindForm() as MainShellForm;
             if (main != null) main.LoadScreen(new CheckoutControl());
         }
-
-        // Builds in-memory Order from cart, customer, and discount for hold or checkout
 
         private Order BuildOrder()
         {
